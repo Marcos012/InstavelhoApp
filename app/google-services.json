@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "275230062841",
+    "firebase_url": "https://instavelhoapp-dd334.firebaseio.com",
+    "project_id": "instavelhoapp-dd334",
+    "storage_bucket": "instavelhoapp-dd334.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:275230062841:android:576213369719f1ba",
+        "android_client_info": {
+          "package_name": "br.org.fundatec.instavelhoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "275230062841-qskejq8lkb0t5mrgi9eoj8ai9slg9egt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.org.fundatec.instavelhoapp",
+            "certificate_hash": "5695052d6bca5fd748271124b162ad7e24cf2ec3"
+          }
+        },
+        {
+          "client_id": "275230062841-ukmer7inilr8pbqpi8t80c19vl57j9ur.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYc4_GL5za48GvbW6jJD059XLuk5hiEQU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "275230062841-ukmer7inilr8pbqpi8t80c19vl57j9ur.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
