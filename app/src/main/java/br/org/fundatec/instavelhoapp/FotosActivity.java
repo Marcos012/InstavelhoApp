@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,9 +27,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -41,11 +44,13 @@ public class FotosActivity extends AppCompatActivity {
     private ImageView mImageView;
 
     private ArrayList<String> fotos = new ArrayList<>();
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fotos);
+        listView = (ListView) findViewById(R.id.ListFotos);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -119,8 +124,6 @@ public class FotosActivity extends AppCompatActivity {
     }
 
 
-
-
     private void lerBD() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("quarto/102");
@@ -138,8 +141,11 @@ public class FotosActivity extends AppCompatActivity {
                     Log.e("LISTA", postSnapshot.getKey());
                     fotos.add(postSnapshot.getKey());
 
+
                     //adicionar o ArraList em uma listView
                 }
+            //   FotosAdapter adapter = new FotosAdapter( FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
+             //   listView.setAdapter( adapter );
             }
 
             @Override
@@ -160,5 +166,16 @@ public class FotosActivity extends AppCompatActivity {
         temp.setValue("Descrição da foto");
         return temp.getKey();
     }
+
+    public void load(){
+        //final StringRequest request = new StringRequest("http://app.follou.com.br/pretimeline", new Response.Listener<String>()
+        //public void onResponse(String response) {
+                Gson gson = new Gson();
+        //        FotosActivity[] fotosA = gson.fromJson(response, FotosActivity[].class);
+                FotosAdapter adapterTimeline = new FotosAdapter(FotosActivity.this, android.R.layout.simple_list_item_1, fotosA);
+                listView.setAdapter(adapterTimeline);
+
+            }
+        }
 
 }
