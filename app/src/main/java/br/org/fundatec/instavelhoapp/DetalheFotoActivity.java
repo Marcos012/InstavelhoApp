@@ -3,11 +3,16 @@ package br.org.fundatec.instavelhoapp;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -49,4 +54,19 @@ public class DetalheFotoActivity extends AppCompatActivity {
             mImageView.setImageBitmap(imageBitmap);
         }
     }
+
+   /* public void load(){
+
+
+        ArrayList<String> fotos = new ArrayList<>();
+
+        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+        Toast.makeText(FotosActivity.this, "Deu certo!!!" + downloadUrl.toString() , Toast.LENGTH_LONG).show();
+        String urlFoto = downloadUrl.toString();
+
+        fotos.add(urlFoto);
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
+        listView.setAdapter(arrayAdapter);
+    }*/
 }

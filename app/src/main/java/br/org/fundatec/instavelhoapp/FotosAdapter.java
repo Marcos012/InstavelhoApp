@@ -1,6 +1,7 @@
 package br.org.fundatec.instavelhoapp;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,20 +12,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
 /**
  * Created by tecnico on 05/10/2017.
  */
 
-public class FotosAdapter extends ArrayAdapter<FotosActivity> {
+public class FotosAdapter extends ArrayAdapter<String> {
 
 
-    public FotosAdapter(@NonNull Context context, @LayoutRes int resource) {
-        super(context, resource);
+    public FotosAdapter(@NonNull Context context, @LayoutRes int resource, ArrayList<String> fotos) {
+        super(context, resource, fotos);
     }
 
-    public FotosAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull FotosActivity[] objects) {
-        super(context, resource, objects);
-    }
+
 
     @NonNull
     @Override
@@ -34,12 +41,22 @@ public class FotosAdapter extends ArrayAdapter<FotosActivity> {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.content_fotos, null);
+            v = vi.inflate(R.layout.item_imagem, null);
         }
 
-        FotosActivity f = getItem(position);
+        String urlDaFoto = getItem(position);
+
+        ImageView image= (ImageView) v.findViewById(R.id.imageView);
+
+
+
+
+        if (image != null){
+            Picasso.with(getContext()).load(urlDaFoto + "").into(image);
+        }
 
         return v;
     }
+
 }
 

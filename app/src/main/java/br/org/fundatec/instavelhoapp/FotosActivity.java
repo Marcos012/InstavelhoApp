@@ -3,6 +3,7 @@ package br.org.fundatec.instavelhoapp;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -32,6 +33,7 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
@@ -46,11 +48,13 @@ public class FotosActivity extends AppCompatActivity {
     private ArrayList<String> fotos = new ArrayList<>();
     private ListView listView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fotos);
         listView = (ListView) findViewById(R.id.ListFotos);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -65,6 +69,7 @@ public class FotosActivity extends AppCompatActivity {
         lerBD();
     }
 
+    //Ativa a camera
     @NeedsPermission(Manifest.permission.CAMERA)
     public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -84,24 +89,23 @@ public class FotosActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            String key = salvarBD();
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            mImageView.setImageBitmap(imageBitmap);
+            //mImageView.setImageBitmap(imageBitmap);
 
 
             // Create a root reference
             StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
             // Create a reference to 'images/mountains.jpg'
-            StorageReference novafoto = storageRef.child("images/" + key +  ".jpg");
+            StorageReference novafoto = storageRef.child("images/" + UUID.randomUUID().toString() +  ".jpg");
 
-            mImageView.setDrawingCacheEnabled(true);
-            mImageView.buildDrawingCache();
-            Bitmap bitmap = mImageView.getDrawingCache();
+            //mImageView.setDrawingCacheEnabled(true);
+            //mImageView.buildDrawingCache();
+            //
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data2 = baos.toByteArray();
 
             UploadTask uploadTask = novafoto.putBytes(data2);
@@ -113,12 +117,17 @@ public class FotosActivity extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                    //Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    Toast.makeText(FotosActivity.this, "Deu certo!!!", Toast.LENGTH_LONG).show();
+                    //taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    Toast.makeText(FotosActivity.this, "Deu certo!!!" + downloadUrl.toString() , Toast.LENGTH_LONG).show();
+                    String urlFoto = downloadUrl.toString();
+                    salvarBD( urlFoto );
+                    //fotos.add(urlFoto);
+
+                    FotosAdapter arrayAdapter = new FotosAdapter(FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
+                    listView.setAdapter(arrayAdapter);
                 }
             });
-
         }
         lerBD();
     }
@@ -126,9 +135,11 @@ public class FotosActivity extends AppCompatActivity {
 
     private void lerBD() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("quarto/102");
+        DatabaseReference myRef = database.getReference("quarto/101");
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
+
+
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
@@ -139,13 +150,12 @@ public class FotosActivity extends AppCompatActivity {
                 fotos.clear();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
                     Log.e("LISTA", postSnapshot.getKey());
-                    fotos.add(postSnapshot.getKey());
-
-
-                    //adicionar o ArraList em uma listView
+                    fotos.add(postSnapshot.getValue(String.class));
                 }
-            //   FotosAdapter adapter = new FotosAdapter( FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
-             //   listView.setAdapter( adapter );
+                FotosAdapter arrayAdapter = new FotosAdapter(FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
+                listView.setAdapter(arrayAdapter);
+
+                //tentando colocar array na listView
             }
 
             @Override
@@ -154,28 +164,15 @@ public class FotosActivity extends AppCompatActivity {
                 Log.w(TAG, "Failed to read value.", error.toException());
             }
         });
-
     }
 
-    private String salvarBD(){
+    private String salvarBD(String urlFoto){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         String nQuarto = "101";
         DatabaseReference myRef = database.getReference("quarto/" + nQuarto);
         //criar string que quando clica muda o quarto.
         DatabaseReference temp = myRef.push();
-        temp.setValue("Descrição da foto");
+        temp.setValue(urlFoto);
         return temp.getKey();
     }
-
-    public void load(){
-        //final StringRequest request = new StringRequest("http://app.follou.com.br/pretimeline", new Response.Listener<String>()
-        //public void onResponse(String response) {
-                Gson gson = new Gson();
-        //        FotosActivity[] fotosA = gson.fromJson(response, FotosActivity[].class);
-                FotosAdapter adapterTimeline = new FotosAdapter(FotosActivity.this, android.R.layout.simple_list_item_1, fotosA);
-                listView.setAdapter(adapterTimeline);
-
-            }
-        }
-
 }
