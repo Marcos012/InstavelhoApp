@@ -48,11 +48,15 @@ public class FotosAdapter extends ArrayAdapter<String> {
 
         ImageView image= (ImageView) v.findViewById(R.id.imageView);
 
-
+        ImageView image2 = (ImageView) v.findViewById(R.id.imageView2);
 
 
         if (image != null){
             Picasso.with(getContext()).load(urlDaFoto + "").into(image);
+        }
+
+        if (image2 != null){
+            Picasso.with(getContext()).load("https://png.icons8.com/office/540/old-man-skin-type-6.png").into(image2);
         }
 
         return v;
