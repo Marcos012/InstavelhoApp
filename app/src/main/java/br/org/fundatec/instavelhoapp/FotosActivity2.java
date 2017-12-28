@@ -42,21 +42,21 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 
-public class FotosActivity extends AppCompatActivity {
+public class FotosActivity2 extends AppCompatActivity {
 
-    private static final String TAG = "FOTOS_ACTIVITY";
+    private static final String TAG = "FOTOS_ACTIVITY2";
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private ImageView mImageView;
 
-    private ArrayList<String> fotos = new ArrayList<>();
+    private ArrayList<String> fotos2 = new ArrayList<>();
     private ListView listView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fotos);
-        listView = (ListView) findViewById(R.id.ListFotos);
+        setContentView(R.layout.activity_fotos2);
+        listView = (ListView) findViewById(R.id.ListFotos2);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -69,7 +69,7 @@ public class FotosActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FotosActivityPermissionsDispatcher.dispatchTakePictureIntentWithCheck(FotosActivity.this);
+                FotosActivity2PermissionsDispatcher.dispatchTakePictureIntentWithCheck(FotosActivity2.this);
             }
         });
         mImageView = (ImageView)findViewById(R.id.image);
@@ -89,7 +89,7 @@ public class FotosActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // NOTE: delegate the permission handling to generated method
-        FotosActivityPermissionsDispatcher.onRequestPermissionsResult(FotosActivity.this, requestCode, grantResults);
+        FotosActivity2PermissionsDispatcher.onRequestPermissionsResult(FotosActivity2.this, requestCode, grantResults);
 
     }
 
@@ -126,12 +126,12 @@ public class FotosActivity extends AppCompatActivity {
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    Toast.makeText(FotosActivity.this, "Foto Adicionada!" , Toast.LENGTH_LONG).show();
+                    Toast.makeText(FotosActivity2.this, "Foto Adicionada!" , Toast.LENGTH_LONG).show();
                     String urlFoto = downloadUrl.toString();
                     salvarBD( urlFoto );
                     //fotos.add(urlFoto);
 
-                    FotosAdapter arrayAdapter = new FotosAdapter(FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
+                    FotosAdapter2 arrayAdapter = new FotosAdapter2(FotosActivity2.this, android.R.layout.simple_list_item_1, fotos2 );
                     listView.setAdapter(arrayAdapter);
                 }
             });
@@ -142,7 +142,7 @@ public class FotosActivity extends AppCompatActivity {
 
     private void lerBD() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("quarto/101");
+        DatabaseReference myRef = database.getReference("quarto/102");
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
 
@@ -154,12 +154,12 @@ public class FotosActivity extends AppCompatActivity {
 //                String value = dataSnapshot.getValue(String.class);
 //                Log.d(TAG, "Value is: " + value);
 //                setTitle(value);
-                fotos.clear();
+                fotos2.clear();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-                    Log.e("LISTA", postSnapshot.getKey());
-                    fotos.add(postSnapshot.getValue(String.class));
+                    Log.e("LISTA2", postSnapshot.getKey());
+                    fotos2.add(postSnapshot.getValue(String.class));
                 }
-                FotosAdapter arrayAdapter = new FotosAdapter(FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
+                FotosAdapter2 arrayAdapter = new FotosAdapter2(FotosActivity2.this, android.R.layout.simple_list_item_1, fotos2 );
                 listView.setAdapter(arrayAdapter);
 
                 //tentando colocar array na listView
@@ -175,7 +175,7 @@ public class FotosActivity extends AppCompatActivity {
 
     private String salvarBD(String urlFoto){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        String nQuarto = "101";
+        String nQuarto = "102";
         DatabaseReference myRef = database.getReference("quarto/" + nQuarto);
         //criar string que quando clica muda o quarto.
         DatabaseReference temp = myRef.push();

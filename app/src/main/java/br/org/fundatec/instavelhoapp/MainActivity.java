@@ -18,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent( this, FotosActivity.class);
         startActivity(intent);
     }
-
+    public void openQuarto2(View view) {
+        Intent intent = new Intent( this, FotosActivity2.class);
+        startActivity(intent);
+    }
 
 }

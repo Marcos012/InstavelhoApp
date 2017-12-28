@@ -55,18 +55,4 @@ public class DetalheFotoActivity extends AppCompatActivity {
         }
     }
 
-   /* public void load(){
-
-
-        ArrayList<String> fotos = new ArrayList<>();
-
-        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-        Toast.makeText(FotosActivity.this, "Deu certo!!!" + downloadUrl.toString() , Toast.LENGTH_LONG).show();
-        String urlFoto = downloadUrl.toString();
-
-        fotos.add(urlFoto);
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(FotosActivity.this, android.R.layout.simple_list_item_1, fotos );
-        listView.setAdapter(arrayAdapter);
-    }*/
 }
